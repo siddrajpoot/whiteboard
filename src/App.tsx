@@ -73,6 +73,11 @@ class App extends React.Component<{}, AppState> {
     // console.log('event :', event);
   }
 
+  handleTouchStart = (event: React.TouchEvent) => {
+    this.touchMovementX = null;
+    this.touchMovementY = null;
+  }
+
   handleTouchMove = (event: React.TouchEvent) => {
     const { clientX, clientY } = event.touches[0]
     if (this.touchMovementX && this.touchMovementY) {
@@ -109,6 +114,7 @@ class App extends React.Component<{}, AppState> {
           onMouseDown={this.handleMouseDown}
           onMouseUp={this.handleMouseUp}
           onMouseMove={this.handleMouseMove}
+          onTouchStart={this.handleTouchStart}
           onTouchMove={this.handleTouchMove}
         >
         </canvas>
