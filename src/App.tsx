@@ -12,6 +12,8 @@ class App extends React.Component<{}, AppState> {
   private hue: number;
   private saturation: number;
   private lightness: number;
+  private touchMovementX: number | null;
+  private touchMovementY: number | null;
 
   constructor(props: any) {
     super(props);
@@ -25,6 +27,8 @@ class App extends React.Component<{}, AppState> {
     this.hue = 0;
     this.saturation = 0;
     this.lightness = 0;
+    this.touchMovementX = null;
+    this.touchMovementY = null;
   }
 
   componentDidMount() {
@@ -32,7 +36,7 @@ class App extends React.Component<{}, AppState> {
     window.addEventListener('resize', this.updateWindowDimensions)
     // console.log(this.canvas.current.getContext('2d'))
     if (this.canvas.current) {
-      console.log(this.canvas.current.getContext('2d'));
+      // console.log(this.canvas.current.getContext('2d'));
       this.ctx = this.canvas.current.getContext('2d');
       if (!this.ctx) return;
     }
@@ -48,16 +52,16 @@ class App extends React.Component<{}, AppState> {
 
   updateHSL = () => {
     this.hue++;
-    console.log(this.hue)
+    // console.log(this.hue)
 
     if (this.hue > 360) this.hue = 0;
   }
 
-  handleMouseDown = (event: React.MouseEvent) => {
+  handleMouseDown = (event: React.MouseEvent | React.TouchEvent) => {
     this.isPressing = true;
   }
 
-  handleMouseUp = (event: React.MouseEvent) => {
+  handleMouseUp = (event: React.MouseEvent | React.TouchEvent) => {
     this.isPressing = false;
   }
 
@@ -69,15 +73,26 @@ class App extends React.Component<{}, AppState> {
     // console.log('event :', event);
   }
 
-  draw = (x: number, y: number, movementX: number, movementY: number) => {
+  handleTouchMove = (event: React.TouchEvent) => {
+    const { clientX, clientY } = event.touches[0]
+    if (this.touchMovementX && this.touchMovementY) {
+      this.draw(clientX, clientY, clientX - this.touchMovementX, clientY - this.touchMovementY)
+    }
+    this.touchMovementX = clientX;
+    this.touchMovementY = clientY;
+    this.updateHSL();
+  }
+
+  draw = (x: number, y: number, movementX?: number | null, movementY?: number | null) => {
     if (!this.ctx) return
     this.ctx.beginPath();
     this.ctx.lineCap = 'round';
     this.ctx.lineCap = 'round';
     this.ctx.strokeStyle = `hsl(${this.hue}, 100%, 50%)`
-    // this.ctx.strokeStyle = `hsl(280, 100%, 50%)`
     this.ctx.lineWidth = 30;
-    this.ctx.moveTo(x - movementX, y - movementY)
+    if ((movementX !== null && movementX !== undefined) && (movementY !== null && movementY !== undefined)) {
+      this.ctx.moveTo(x - movementX, y - movementY)
+    }
     this.ctx.lineTo(x, y);
     this.ctx.stroke();
   }
@@ -94,6 +109,7 @@ class App extends React.Component<{}, AppState> {
           onMouseDown={this.handleMouseDown}
           onMouseUp={this.handleMouseUp}
           onMouseMove={this.handleMouseMove}
+          onTouchMove={this.handleTouchMove}
         >
         </canvas>
       </div>
