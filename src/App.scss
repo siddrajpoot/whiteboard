@@ -1,0 +1,67 @@
+.app {
+	height: 100%;
+	width: 100%;
+	display: flex;
+	align-items: center;
+	flex-direction: column;
+}
+
+.clear {
+	z-index: 1;
+	position: absolute;
+	top: 0rem;
+	right: 0rem;
+	height: 3rem;
+	cursor: pointer;
+	padding: 2rem;
+	box-sizing: content-box;
+}
+
+.canvas-container {
+	margin-top: 10vh;
+
+	.canvas {
+		background-color: #fff;
+		border-radius: 2rem;
+		box-shadow: 0px 0px 16px 3px rgba(0, 0, 0, 0.1);
+		touch-action: manipulation;
+	}
+}
+
+.tools {
+	flex: 1;
+	width: 100%;
+	display: flex;
+	align-items: center;
+	justify-content: space-around;
+}
+
+.colors {
+	display: flex;
+	align-items: center;
+	justify-content: space-between;
+}
+
+.color {
+	margin-right: 10px;
+
+	&:last-child {
+		margin-right: 0;
+	}
+	.circle {
+		height: 30px;
+		width: 30px;
+		border-radius: 20px;
+		transition: box-shadow 0.2s ease-in-out;
+	}
+
+	.rainbow {
+		background-image: url('./assets/color-wheel-transparent-14.png');
+		background-size: 110%;
+		background-position: center;
+	}
+
+	.selected {
+		box-shadow: 0 0 1px 4px rgba(0, 0, 0, 0.15);
+	}
+}
